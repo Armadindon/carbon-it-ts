@@ -71,7 +71,6 @@ export class TreasureMap {
           break;
       }
     }
-    console.log(this.treasures, this.mountains);
   }
 
   /** Retourne la carte sous une forme matricielle composée de chaînes de caractères */
@@ -95,7 +94,7 @@ export class TreasureMap {
   /** Retourne la description de la carte */
   public getDescription() {
     return (
-      "" +
+      `C - ${this.width} - ${this.height}\n` +
       this.mountains
         .map((mountain) => `M - ${mountain.x} - ${mountain.y}`)
         .join("\n") +
