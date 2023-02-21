@@ -30,7 +30,7 @@ export class TreasureMap {
     description: string
   ) {
     // On commence par netoyer l'input
-    let instructions: string[] = description
+    const instructions: string[] = description
       .split("\n")
       .filter((val) => val !== "");
 
@@ -41,9 +41,8 @@ export class TreasureMap {
       .map((val) => parseInt(val));
 
     // On parse les lignes suivante
-    for (let instruction of instructions.splice(1)) {
-      let action: InstructionTypes, parameters: string[];
-      [action, ...parameters] = <[InstructionTypes, string]>(
+    for (const instruction of instructions.splice(1)) {
+      const [action, ...parameters] = <[InstructionTypes, ...Array<string>]>(
         instruction.split(" - ").map((val) => String(val).trim())
       );
 
@@ -75,18 +74,18 @@ export class TreasureMap {
 
   /** Retourne la carte sous une forme matricielle composée de chaînes de caractères */
   public getMatrix() {
-    let matrix: string[][] = [];
+    const matrix: string[][] = [];
 
     // On construit la matrice
     for (let i = 0; i < this.height; i++) {
-      let line = [];
+      const line = [];
       for (let j = 0; j < this.width; j++) line.push(".");
       matrix.push(line);
     }
 
     // On y ajoute le contenu
-    for (let { x, y } of this.mountains) matrix[y][x] = "M";
-    for (let { x, y, nb } of this.treasures) matrix[y][x] = `T(${nb})`;
+    for (const { x, y } of this.mountains) matrix[y][x] = "M";
+    for (const { x, y, nb } of this.treasures) matrix[y][x] = `T(${nb})`;
 
     return matrix;
   }
