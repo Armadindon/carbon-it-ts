@@ -1,12 +1,4 @@
-import { Treasure } from "./TreasureMap";
-
-/** Objet représentant des coordonées dans un plan a 2 dimensions */
-export type Coordinates = { x: number; y: number };
-/** Objet représentant une taille 2D */
-export type Size = { width: number; height: number };
-
-/** Différente directions dans lesquelles un aventurier peut regarder */
-export type Heading = "N" | "E" | "S" | "W";
+import { Coordinates, Heading, Size, Treasure } from "./types";
 
 /** Fait correspondre les headings à une direction */
 export const HEADING_TO_MOVEMENT: {

@@ -1,15 +1,4 @@
-export type Mountain = {
-  x: number;
-  y: number;
-};
-
-export type Treasure = {
-  x: number;
-  y: number;
-  nb: number;
-};
-
-export type InstructionTypes = "A" | "M" | "T";
+import { InstructionTypes, Mountain, Treasure } from "./types";
 
 /**
  * Classe contenant toutes les informations liées à la carte de la simulation

@@ -1,4 +1,4 @@
-import { Treasure } from "./../src/TreasureMap";
+import { Treasure } from "./../src/types";
 import { Adventurer } from "./../src/Adventurer";
 import { describe, expect, test } from "@jest/globals";
 
