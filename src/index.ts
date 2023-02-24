@@ -1,5 +1,6 @@
 import { TreasureMap } from "./TreasureMap";
 import { writeFileSync } from "fs";
+import { parseArgs } from "node:util";
 
 /** Utility function to sleep a number of ms */
 const sleep = (ms: number) => {
@@ -12,8 +13,29 @@ const sleep = (ms: number) => {
  * Main Function
  */
 const main = async () => {
-  const outputFile = "output.txt";
-  const msDelay = 1000;
+  const {
+    values: { outputFile, delayString },
+  } = parseArgs({
+    options: {
+      outputFile: {
+        type: "string",
+        short: "o",
+        default: "output.txt",
+      },
+      delayString: {
+        type: "string",
+        short: "d",
+        default: "1000",
+      },
+    },
+  });
+
+  const delay = parseInt(delayString || "1000");
+  if (Number.isNaN(delay)) {
+    console.error("Delay should be a duration in ms");
+    process.exit(1);
+  }
+
   const tr = new TreasureMap(`C - 3 - 4
   M - 1 - 0
   M - 2 - 1
@@ -27,13 +49,13 @@ const main = async () => {
 
   console.log(`1er tour`);
   while (tr.do_turn(true)) {
-    await sleep(msDelay);
+    await sleep(delay);
     i++;
     console.log(`\n${i}e tour`);
   }
 
   console.log(`\nWriting to ${outputFile}`);
-  writeFileSync(outputFile, tr.getDescription());
+  writeFileSync(outputFile as string, tr.getDescription());
 };
 
 main();
