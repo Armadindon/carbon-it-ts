@@ -1,3 +1,4 @@
+import { Adventurer } from "./Adventurer";
 import { InstructionTypes, Mountain, Treasure } from "./types";
 
 /**
@@ -12,6 +13,8 @@ export class TreasureMap {
   private mountains: Mountain[] = [];
   /** Liste des trésors présent sur la carte */
   private treasures: Treasure[] = [];
+  /** Liste des aventuriers présent sur la carte */
+  private adventurers: Adventurer[] = [];
 
   /** Constructeur de la carte, prend en paramètre la description de la carte */
   constructor(
@@ -36,7 +39,7 @@ export class TreasureMap {
       );
 
       if (action == "A") {
-        console.log("Aventurier a traiter");
+        this.adventurers.push(new Adventurer(instruction));
         continue;
       }
 
@@ -75,6 +78,8 @@ export class TreasureMap {
     // On y ajoute le contenu
     for (const { x, y } of this.mountains) matrix[y][x] = "M";
     for (const { x, y, nb } of this.treasures) matrix[y][x] = `T(${nb})`;
+    for (const { x, y, heading } of this.adventurers)
+      matrix[y][x] = `A(${heading})`;
 
     return matrix;
   }
@@ -94,8 +99,37 @@ export class TreasureMap {
               (treasure) => `T - ${treasure.x} - ${treasure.y} - ${treasure.nb}`
             )
             .join("\n")
+        : "") +
+      // On fait la même chose avec les aventuriers
+      (this.adventurers.length !== 0
+        ? "\n" +
+          this.adventurers
+            .map((adventurer) => adventurer.description)
+            .join("\n")
         : "")
     );
+  }
+
+  /** Réalise un tour de plateau */
+  public do_turn(verbose = false) {
+    const remainingAdventurers = this.adventurers.filter(
+      (adv) => !adv.finished
+    );
+    for (const adv of remainingAdventurers) {
+      // On recalcule la position des obstacles a chaque tour
+      // C'est par ce que l'on a des aventuriers qui bougent au fur et à mesure
+      const obstacles = this.mountains.concat(
+        this.adventurers.map(({ x, y }) => ({ x, y }))
+      );
+      adv.doMove(obstacles, this.treasures, {
+        height: this.height,
+        width: this.width,
+      });
+    }
+
+    if (verbose) console.log(this.toString());
+
+    return !this.adventurers.every(({ finished }) => finished);
   }
 
   /** Retourne la représentation en chaine de caractères de la carte (sous forme matricielle) */
